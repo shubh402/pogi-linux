@@ -1,0 +1,28 @@
+name: Build ISO
+
+on: workflow_dispatch
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: panchajanya1999/archlinux:latest
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v3          
+      
+      - name: Install ArchISO
+        run: |
+          pacman -Sy
+          pacman --noconfirm -S git archiso
+
+      - name: Build ISO File
+        run: |
+          mkarchiso -v .
+          find out/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dragoonlinux
+          path: out/*.iso
